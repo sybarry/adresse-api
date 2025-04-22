@@ -1,28 +1,64 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AddressesService } from './addresses.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Address } from './address.entity';
+import axios from 'axios';
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('AddressesService', () => {
   let service: AddressesService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AddressesService,
-        {
-          provide: getRepositoryToken(Address),
-          useValue: {
-            find: jest.fn(), // ou d'autres méthodes comme save, findOne, etc.
-          },
-        },
-      ],
-    }).compile();
+  const mockRepo = {
+    create: jest.fn((addr) => addr),
+    save: jest.fn(async (addr) => ({ id: 1, ...addr })),
+  };
 
-    service = module.get<AddressesService>(AddressesService);
+  beforeEach(() => {
+    service = new AddressesService(mockRepo as any);
+    jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('devrait créer une adresse à partir d’une requête valide', async () => {
+    // Mock retour de l’API BAN
+    mockedAxios.get.mockResolvedValue({
+      data: {
+        features: [
+          {
+            geometry: {
+              coordinates: [2.123, 48.987],
+            },
+            properties: {
+              label: '8 Boulevard du Port 95000 Cergy',
+              housenumber: '8',
+              street: 'Boulevard du Port',
+              postcode: '95000',
+              citycode: '95127',
+            },
+          },
+        ],
+      },
+    });
+
+    const result = await service.createFromQuery('8 boulevard du port, Cergy');
+
+    expect(result).toEqual({
+      id: 1,
+      label: '8 Boulevard du Port 95000 Cergy',
+      housenumber: '8',
+      street: 'Boulevard du Port',
+      postcode: '95000',
+      citycode: '95127',
+      longitude: 2.123,
+      latitude: 48.987,
+    });
+
+    expect(mockRepo.create).toHaveBeenCalled();
+    expect(mockRepo.save).toHaveBeenCalled();
+  });
+
+  it('devrait retourner null si aucune adresse n’est trouvée', async () => {
+    mockedAxios.get.mockResolvedValue({ data: { features: [] } });
+
+    const result = await service.createFromQuery('adresse introuvable');
+    expect(result).toBeNull();
   });
 });

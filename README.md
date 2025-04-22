@@ -12,8 +12,9 @@ Avant de commencer, assurez-vous d'avoir installé Docker et Docker Compose sur 
 ### 1. Cloner le projet
 
 ```bash
-git clone <url_du_dépôt_git>
+git clone https://github.com/sybarry/adresse-api.git
 cd adresse-api
+cd src
 ```
 
 ### 2. Construire et lancer le projet
