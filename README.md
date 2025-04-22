@@ -31,6 +31,10 @@ docker-compose up --force-recreate
 
 ```
 
+### Probleme rencontré lors de la reonstruction et le lencement du projet
+Normalement le projet fonctionne correctement en local (voir image en dessous), mais quand je doploye j'ai une erreur pour mes tests automatique.
+
+
 ### 3. Accéder à l'API
 
 Une fois que les conteneurs sont lancés, l'API sera accessible sur `http://localhost:8000`.
