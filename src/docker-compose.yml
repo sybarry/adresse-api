@@ -1,29 +1,24 @@
 version: '3.8'
 
 services:
-  api-test:
-    build:
-      context: .
-      target: tester
-    volumes:
-      - .:/app
-    env_file:
-      - .env.test
-    command: npm run test
-
   api:
-    build:
-      context: .
-      target: runner
+    build: .
     ports:
       - "8000:8000"
     volumes:
       - db_data:/data
     env_file:
       - .env
+
+  api-test:
+    build: .
+    command: npm run test
+    volumes:
+      - .:/app
+    env_file:
+      - .env.test
     depends_on:
-      api-test:
-        condition: service_completed_successfully
+      - api
 
 volumes:
   db_data:
