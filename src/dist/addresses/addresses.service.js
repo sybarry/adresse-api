@@ -55,15 +55,14 @@ let AddressesService = class AddressesService {
         if (!address) {
             throw new common_1.HttpException({ error: 'Adresse non trouvée.' }, common_1.HttpStatus.NOT_FOUND);
         }
-        const { latitude, longitude } = address;
+        const { citycode } = address;
         try {
-            const response = await axios_1.default.get('https://www.georisques.gouv.fr/v3/gaspar/risques', {
+            const response = await axios_1.default.get('https://www.georisques.gouv.fr/api/v1/gaspar/risques', {
                 params: {
-                    lon: longitude,
-                    lat: latitude,
+                    code_insee: citycode,
                 },
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (compatible; adresse-api/1.0)',
+                    'User-Agent': 'Mozilla/5.0',
                 },
             });
             return response.data;

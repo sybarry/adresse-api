@@ -24,7 +24,9 @@ let AddressesController = class AddressesController {
     async create(createAddressDto) {
         const { q } = createAddressDto;
         if (!q || typeof q !== 'string' || q.trim() === '') {
-            throw new common_1.HttpException({ error: "Le champ 'q' est requis et doit être une chaîne non vide." }, common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException({
+                error: 'Le champ \'q\' est requis et doit être une chaîne non vide.',
+            }, common_1.HttpStatus.BAD_REQUEST);
         }
         try {
             const result = await this.addressesService.createFromQuery(q);
@@ -39,7 +41,7 @@ let AddressesController = class AddressesController {
             if (error instanceof common_1.HttpException)
                 throw error;
             throw new common_1.HttpException({
-                error: "Erreur serveur : impossible de contacter l'API externe.",
+                error: 'Erreur serveur : impossible de contacter l\'API externe.',
             }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
