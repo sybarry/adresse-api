@@ -35,10 +35,14 @@ docker-compose up --force-recreate
 Normalement le projet fonctionne correctement en local (voir image en dessous), mais quand je doploye j'ai une erreur pour mes tests automatique.
 
 ### En local pour l'API
+```bash
 npm run start:dev
+```
 
 ### En local pour les test:
+```bash
 npm run test
+```
 
 ### 3. Accéder à l'API
 
